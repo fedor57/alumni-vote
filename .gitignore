@@ -1,0 +1,7 @@
+.idea
+venv
+*.pyc
+*.pyo
+*.iml
+website/secret_key.py
+website/local_settings.py

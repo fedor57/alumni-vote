@@ -1,0 +1,28 @@
+<form action="{% url 'poll_vote' poll.id %}" method="post" class="poll">
+    {% csrf_token %}
+    <h1>{{ poll.title }}</h1>
+    <div class="poll-description">{{ poll.description|safe }}</div>
+
+    {% for option in poll.polloption_set.all %}
+        <div class="poll-option">
+            <input type="checkbox"
+                   id="option_{{ option.id }}"
+                   name="option_{{ option.id }}"
+                   {% if option.id in voted_options %}checked="checked"{% endif %}
+            /><label for="option_{{ option.id }}">
+                {{ option.title }}
+            </label>
+            <div>{{ option.description|safe }}</div>
+        </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">
+        {% if poll.id in voted_polls %}
+            Переголосовать
+        {% else %}
+            Проголосовать
+        {% endif %}
+    </button>
+    {% if poll.id in voted_polls %}
+        <a href="{% url 'poll_results' poll.id %}" class="btn btn-outline-secondary">Результаты</a>
+    {% endif %}
+</form>

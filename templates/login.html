@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if error %}
+        <div class="alert alert-danger" role="alert">Код не принят</div>
+    {% endif %}
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="text" class="form-control" name="auth_code" placeholder="Код выпускника">
+        </div>
+        <button type="submit" class="btn btn-primary">Войти</button>
+    </form>
+{% endblock %}
