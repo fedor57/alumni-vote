@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% if error %}
-        <div class="alert alert-danger" role="alert">Код не принят</div>
-    {% endif %}
+    <div class="container mb-3">
+        Введите код или узнайте о них больше на странице вопросов и ответов (<a href="http://auth.alumni57.ru/qa">http://auth.alumni57.ru/qa</a>)
+    </div>
     <form action="" method="POST">
         {% csrf_token %}
         <div class="form-group">
