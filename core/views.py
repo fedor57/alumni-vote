@@ -103,7 +103,7 @@ def poll_vote_view(request, poll_id=None, alumnus=None):
     poll = core.models.Poll.objects.get(id=poll_id)
     reverse_url = reverse('public_polls')
     if not poll.public or poll.open_until < timezone.now():
-        reverse_url = reverse('poll', poll.id)
+        reverse_url = reverse('poll', kwargs={'poll_id': poll.id})
 
     submitted_options = {int(x.replace('option_', '')) for x in post.keys()
                          if x.startswith('option_') and post[x] == u'on'}
