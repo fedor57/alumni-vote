@@ -29,7 +29,7 @@ class Poll(models.Model):
 class PollOption(models.Model):
     poll = models.ForeignKey(Poll, db_index=True)
     priority = models.PositiveSmallIntegerField()
-    open_until = models.DateTimeField()
+    open_until = models.DateTimeField(null=True, blank=True)
     title = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
 
