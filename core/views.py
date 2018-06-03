@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.six import wraps
+from django.utils.http import urlquote, urlencode
 
 import auth
 import core.models
@@ -19,7 +20,7 @@ def alumnus_required(*args):
         def inner(*args, **kwargs):
             request = args[0]
             if 'alumnus' not in request.session:
-                return redirect(reverse('login'))
+                return redirect(reverse('login') + '?' + urlencode({'b': request.get_full_path()}))
             if load:
                 alumnus = core.models.Alumnus.objects.get(id=request.session['alumnus']['id'])
                 kwargs['alumnus'] = alumnus
@@ -35,8 +36,9 @@ def alumnus_required(*args):
 
 
 def login_view(request):
+    redirect_url = request.GET.get('b', reverse('public_polls'))
     if 'alumnus' in request.session:
-        return redirect(reverse('public_polls'))
+        return redirect(redirect_url)
     if request.method == 'POST':
         auth_code = request.POST.get('auth_code', '')
         if auth_code:  # иначе анонимус
@@ -49,10 +51,10 @@ def login_view(request):
                 data['id'] = alumnus.id
                 request.session['alumnus'] = data
                 request.session['auth_code'] = auth_code
-                return redirect(reverse('public_polls'))
+                return redirect(redirect_url)
         messages.error(request, u'Код не принят')
         return redirect(reverse('login'))
-    return render(request, 'login.html')
+    return render(request, 'login.html', {'b': urlquote(redirect_url)})
 
 
 def logout_view(request):
@@ -121,6 +123,9 @@ def poll_vote_view(request, poll_id=None, alumnus=None):
 
     if len(submitted_options) > poll.max_votes:
         messages.error(request, u'Надо выбрать не более {} опций'.format(poll.max_votes))
+        return redirect(reverse_url)
+
+    if len(submitted_options) == 0:
         return redirect(reverse_url)
 
     poll_vote = core.models.PollVote.objects.filter(
