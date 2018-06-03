@@ -4,7 +4,7 @@
     <div class="container mb-3">
         Введите код или узнайте о них больше на странице вопросов и ответов (<a href="http://auth.alumni57.ru/qa">http://auth.alumni57.ru/qa</a>)
     </div>
-    <form action="" method="POST">
+    <form action="/?b={{ b }}" method="POST">
         {% csrf_token %}
         <div class="form-group">
             <input type="text" class="form-control" name="auth_code" placeholder="Код выпускника">
