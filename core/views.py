@@ -125,9 +125,6 @@ def poll_vote_view(request, poll_id=None, alumnus=None):
         messages.error(request, u'Надо выбрать не более {} опций'.format(poll.max_votes))
         return redirect(reverse_url)
 
-    if len(submitted_options) == 0:
-        return redirect(reverse_url)
-
     poll_vote = core.models.PollVote.objects.filter(
         poll=poll,
         alumnus=alumnus,
@@ -136,6 +133,10 @@ def poll_vote_view(request, poll_id=None, alumnus=None):
     if poll_vote:
         code = poll_vote.code
     else:
+        # New vote: at least one option, please
+        # If this is a re-vote and poll allows 0 options, it's fine then
+        if len(submitted_options) == 0:
+            return redirect(reverse_url)
         code = request.session['auth_code']
         temp_code = auth.get_temporary_code(code, poll.auth_app)
         if temp_code.get('status') == 'bad_request':
