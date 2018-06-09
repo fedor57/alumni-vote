@@ -36,6 +36,9 @@ class PollOption(models.Model):
     def __unicode__(self):
         return '{}: {}'.format(unicode(self.poll), self.title)
 
+    class Meta:
+        ordering = ['priority']
+
 
 class PollVote(models.Model):
     poll = models.ForeignKey(Poll, db_index=True)
